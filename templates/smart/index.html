@@ -1,0 +1,115 @@
+{% extends "smart/base_site_index.html" %}
+{% load i18n static %}
+
+
+{% block extrahead %}
+{{ block.super }}
+<script type="text/javascript" src="/static/admin/js/core.js"></script>
+<script type="text/javascript" src="/static/admin/js/vendor/jquery/jquery.js"></script>
+<script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
+<script type="text/javascript" src="/static/admin/js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="/static/admin/js/actions.js"></script>
+<script type="text/javascript" src="/static/admin/js/urlify.js"></script>
+<script type="text/javascript" src="/static/admin/js/prepopulate.js"></script>
+<script type="text/javascript" src="/static/admin/js/vendor/xregexp/xregexp.js"></script>
+<script type="text/javascript">
+function clickCheck(){
+   $("#devicelist_form").submit();
+}
+</script>
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-list{% endblock %}
+
+{% block coltype %}flex{% endblock %}
+
+{% block content %}
+<section id="mainpage-mos">
+<!-- BEGIN TILE CONTENT -->
+
+<!-- Tile 1 -->
+    {% for result in devices %}
+{% if result.status <= 4 %}
+
+    <div class="tile small" data-stops="0,25%,50%,75%,100%" data-speed="3000" data-delay="0" data-direction="horizontal" data-stack="true">
+        <span class="tile-date"><span class="date">{{ result.address }}</span>&nbsp;&nbsp;<span class="month">{{ result.name }}</span></span>
+        {% if result.type == 0 %}
+         <span class="tile-cat-off bluetxt">点击控制</span>
+        <div class="live-front">
+        <a href="{{result.id}}/{{result.status}}/0/change/" class="lightbox" rel="section">
+            {% if result.status == 0 %}<img class="live-img" src="{% static "admin/img/turnoff.png" %}" alt="Article 1"/>
+            {%  endif %}
+            {% if result.status == 1 %}<img class="live-img" src="{% static "admin/img/turnon.png" %}" alt="Article 1"/>
+            {%  endif %}
+        </a>
+        </div>
+        {% endif %}
+        {% if result.type == 2 %}
+        {% if result.status == 1 %}
+         <span class="tile-cat-off bluetxt">感应有人</span>
+        <div class="live-front">
+            <img class="live-img" src="{% static "admin/img/sensoron.png" %}" alt="Article 1"/>
+        </div>
+        {% else %}
+        <span class="tile-cat-off bluetxt">感应无人</span>
+        <div class="live-front">
+            <img class="live-img" src="{% static "admin/img/sensoroff.png" %}" alt="Article 1"/>
+        </div>
+        {% endif %}
+        {% endif %}
+        {% if result.type == 1 %}
+
+         <span class="tile-cat-off bluetxt">点击控制</span>
+        <div class="live-front">
+            {% if result.status == 0 %}<img class="live-img" src="{% static "admin/img/turnon-0.png" %}" alt="Article 1"/>
+            {%  endif %}
+            {% if result.status == 1 %}<img class="live-img" src="{% static "admin/img/turnon-1.png" %}" alt="Article 1"/>
+            {%  endif %}
+            {% if result.status == 2 %}<img class="live-img" src="{% static "admin/img/turnon-2.png" %}" alt="Article 1"/>
+        	{%  endif %}
+            {% if result.status == 3 %}<img class="live-img" src="{% static "admin/img/turnon-3.png" %}" alt="Article 1"/>
+        	{%  endif %}
+            {% if result.status == 4 %}<img class="live-img" src="{% static "admin/img/turnon-4.png" %}" alt="Article 1"/>
+        	{%  endif %}
+        <a href="{{result.id}}/{{result.status}}/1/change/" class="lightbox" rel="section">
+            <img class="live-up" src="{% static "admin/img/lightup.png" %}" alt="Article 1"/>
+        </a>
+        <a href="{{result.id}}/{{result.status}}/2/change/" class="lightbox" rel="section">
+            <img class="live-down" src="{% static "admin/img/lightdown.png" %}" alt="Article 1"/>
+        </a>
+        </div>
+        {% endif %}
+
+    </div>
+        {% else %}
+        <div class="tile small" data-stops="0,25%,50%,75%,100%" data-speed="3000" data-delay="0" data-direction="horizontal" data-stack="true">
+        <span class="tile-date"><span class="date">{{ result.address }}</span>&nbsp;&nbsp;<span class="month">{{ result.name }}</span></span>
+         <span class="tile-cat-off bluetxt">开关关闭</span>
+        {% if result.type == 0 %}
+        <div class="live-front">
+            <img class="live-img" src="{% static "admin/img/turnpwoff1.png" %}" alt="Article 1"/>
+            </div>
+        {% endif %}
+        {% if result.type == 1 %}
+        <div class="live-front">
+            <img class="live-img" src="{% static "admin/img/turnpwoff.png" %}" alt="Article 1"/>
+        </div>
+        {% endif %}
+        {% if result.type == 2 %}
+        <div class="live-front">
+            <img class="live-img" src="{% static "admin/img/sensoroff.png" %}" alt="Article 1"/>
+        </div>
+        {% endif %}
+
+
+
+    </div>
+
+        {% endif %}
+{% endfor %}
+<!-- END TILE CONTENT -->
+</section><!-- end #content-mos -->
+
+
+{% endblock %}
+

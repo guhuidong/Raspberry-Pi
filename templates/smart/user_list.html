@@ -1,0 +1,25 @@
+{% extends 'smart/_base.html' %}
+
+{% block content %}
+  <a href="{% url 'smart:log_out' %}">Log out</a>
+  <br>
+  <ul>
+    {% for user in users %}
+      <!-- NOTE: We escape HTML to prevent XSS attacks. -->
+      <li data-username="{{ user.username|escape }}">
+        {{ user.username|escape }}: {{ user.status|default:'Offline' }}
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock content %}
+
+{% block script %}
+<script>
+var socket = new WebSocket('ws://219.147.235.204:3368');
+ws.onmessage = function(result,nTime){
+alert("从服务端收到的数据:");
+alert("最近一次发送数据到现在接收一共使用时间:" + nTime);
+console.log(result);
+}
+</script>
+{% endblock script %}

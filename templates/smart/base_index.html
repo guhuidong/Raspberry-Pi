@@ -1,0 +1,59 @@
+{% load i18n static %}<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<head>
+<title>{% block title %}{% endblock %}</title>
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+<link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "admin/css/style.css" %}{% endblock %}" />
+<link id="clink" href="css/style-blue.css" title="style" rel="stylesheet" type="text/css" media="screen"/>
+{% block extrastyle %}{% endblock %}
+{% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}" />{% endif %}
+{% block extrahead %}{% endblock %}
+{% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
+</head>
+{% load i18n %}
+
+<body>
+<div id="bodypat">
+<section id="container">
+<!-- BEGIN HEADER -->
+<header class="clearfix">
+<!-- BEGIN LOGO -->
+{% load staticfiles %}
+<div id="headerlink"><img id="logo" src="{% static "admin/img/logo.png" %}" alt="logo"/><span id="sitename">远程控制</span></div>
+<nav>
+<ul id="nav" class="clearfix">
+<!-- Menu Item 1 -->
+	<li class="current"><a href="{%  url 'smart:index'%}" title="Home"><span>首页</span></a></li>
+<!-- Menu Item 2 -->
+    <li>
+    	<a href="{% url 'smart:password_change' %}" title="Portfolio"><span>{% trans 'Change password' %}</span></a>
+
+    </li>
+<!-- Menu Item 3 -->
+    <li><a href="{% url 'smart:logout' %}" title="Blog"><span>{% trans 'Log out' %}</span></a>
+
+    </li>
+
+</ul>
+</nav>
+</header>
+<section id="mainpage-mos">
+<!-- BEGIN TILE CONTENT -->
+<section id="content-mos" class="centered clearfix">
+{% block pretitle %}{% endblock %}
+        {% block content %}
+        {% block object-tools %}{% endblock %}
+        {{ content }}
+        {% endblock %}
+</section><!-- end #content-mos -->
+
+</section><!-- end #mainpage-mos -->
+</section>
+</div>
+    <!-- Container -->
+
+<!-- END Container -->
+
+</body>
+</html>

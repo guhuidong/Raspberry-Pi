@@ -1,0 +1,123 @@
+{% extends "smart/base_site_index.html" %}
+{% load i18n static %}
+
+
+{% block extrahead %}
+{{ block.super }}
+<script type="text/javascript" src="/static/admin/js/core.js"></script>
+<script type="text/javascript" src="/static/admin/js/vendor/jquery/jquery.js"></script>
+<script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
+<script type="text/javascript" src="/static/admin/js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="/static/admin/js/actions.js"></script>
+<script type="text/javascript" src="/static/admin/js/urlify.js"></script>
+<script type="text/javascript" src="/static/admin/js/prepopulate.js"></script>
+<script type="text/javascript" src="/static/admin/js/vendor/xregexp/xregexp.js"></script>
+<script type="text/javascript">
+function clickCheck(){
+   $("#devicelist_form").submit();
+}
+</script>
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-list{% endblock %}
+
+{% block coltype %}flex{% endblock %}
+
+{% block content %}
+<section id="mainpage-mos">
+<!-- BEGIN TILE CONTENT -->
+<section id="content-mos" class="centered clearfix">
+<!-- Tile 1 -->
+    {% for result in devices %}
+{% if result.status <= 4 %}
+<a href="" class="lightbox" rel="section">
+    <div class="tile small" data-stops="0,25%,50%,75%,100%" data-speed="3000" data-delay="0" data-direction="horizontal" data-stack="true">
+        <span class="tile-date"><span class="date">{{ result.address }}</span><span class="month">{{ result.name }}</span></span>
+        <span class="tile-cat bluetxt">点击控制</span>
+        <div class="live-front">
+            {% if result.status == 0 %}<img class="live-img" src="{% static "admin/img/light-off-all.png" %}" alt="Article 1"/>
+            {%  endif %}
+            {% if result.status == 1 %}<img class="live-img" src="{% static "admin/img/light-on-1.png" %}" alt="Article 1"/>
+            {%  endif %}
+            {% if result.status == 2 %}<img class="live-img" src="{% static "admin/img/light-on-2.png" %}" alt="Article 1"/>
+        	{%  endif %}
+            {% if result.status == 3 %}<img class="live-img" src="{% static "admin/img/light-on-3.png" %}" alt="Article 1"/>
+        	{%  endif %}
+            {% if result.status == 4 %}<img class="live-img" src="{% static "admin/img/light-on-4.png" %}" alt="Article 1"/>
+        	{%  endif %}
+        </div>
+
+
+    </div>
+</a>
+        {% else %}
+    <div class="tile small" data-stops="0,25%,50%,75%,100%" data-speed="3000" data-delay="0" data-direction="horizontal" data-stack="true">
+        <span class="tile-date"><span class="date">{{ result.address }}</span><span class="month">{{ result.name }}</span></span>
+        <div class="live-front">
+        	<img class="live-img" src="{% static "admin/img/lightoff-all.png" %}" alt="Article 1"/>
+
+        </div>
+
+
+    </div>
+
+        {% endif %}
+{% endfor %}
+<!-- END TILE CONTENT -->
+</section><!-- end #content-mos -->
+</section><!-- end #mainpage-mos -->
+
+ <div id="content-main">
+<div class="module" id="changelist">
+    {% if cl.formset.errors %}
+        <p class="errornote">
+        {% if cl.formset.total_error_count == 1 %}{% trans "Please correct the error below." %}{% else %}{% trans "Please correct the errors below." %}{% endif %}
+        </p>
+        {{ cl.formset.non_form_errors }}
+    {% endif %}
+
+      <form id="devicelist_form" method="post"{% if cl.formset.is_multipart %} enctype="multipart/form-data"{% endif %} >{% csrf_token %}
+      {% if cl.formset %}
+        <div>{{ cl.formset.management_form }}</div>
+      {% endif %}
+
+      {% block result_list %}
+<div class="results">
+{{res}}
+<table id="result_list">
+<thead>
+<tr>
+{% for header in headers %}
+<th scope="col" >
+   <div class="text">{{ header}}</div>
+   <div class="clear"></div>
+</th>{% endfor %}
+</tr>
+</thead>
+<tbody>
+{% for result in devices %}
+<tr class="{% cycle 'row1' 'row2' %}">
+<th class="field-name"><a href="{{result.id}}/change/">{{ result.address }}{{ result.name }}</a></th>
+
+<td class="field-status">
+{% if result.type == 0 %}
+<div class="squaredOne">
+</div>
+<input type="hidden" id="chk_val" name="chk_val" value="{{result.id}}">
+<input type="hidden" id="chk_sts" name="chk_sts" value="{{result.status}}">
+<input id="squaredOne{{result.id}}" name="device_list" type="checkbox" value="{{result.id}}" {% if result.status == 1 %} checked {% endif %}
+onchange="javascript:submit();"/>
+
+{% endif %}
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+      {% endblock %}
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
